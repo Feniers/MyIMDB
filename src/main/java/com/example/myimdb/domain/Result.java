@@ -1,28 +1,32 @@
 package com.example.myimdb.domain;
 
 import com.example.myimdb.config.ResultStatus;
-import lombok.AllArgsConstructor;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * 统一返回类
  */
+
+@Schema(name = "Result", description = "统一返回类")
 @Data
 public class Result {
     /**
      * 返回码
      */
+    @Schema(description = "返回码", example = "200")
     private int code;
 
     /**
      * 返回信息
      */
+    @Schema(description = "返回信息", example = "success")
     private String message;
 
     /**
      * 数据
      */
+    @Schema(description = "数据", example = "{}")
     private Object data;
 
     public Result(int code, String message) {

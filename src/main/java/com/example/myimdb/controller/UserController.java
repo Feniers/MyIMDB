@@ -1,6 +1,5 @@
 package com.example.myimdb.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.myimdb.authorization.annotation.Authorization;
 import com.example.myimdb.authorization.annotation.CurrentUser;
 import com.example.myimdb.authorization.manager.TokenManager;
@@ -9,14 +8,19 @@ import com.example.myimdb.config.ResultStatus;
 import com.example.myimdb.domain.Result;
 import com.example.myimdb.domain.User;
 import com.example.myimdb.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@Tag(name = "User", description = "用户相关接口")
+@RestController
 @RequestMapping("/user")
 public class UserController {
     @Autowired
@@ -25,6 +29,11 @@ public class UserController {
     @Autowired
     private TokenManager tokenManager;
 
+    @Operation(summary = "用户登录", description = "用户登录接口")
+    @Parameters({
+            @Parameter(name = "username", description = "用户名", required = true, example = "admin"),
+            @Parameter(name = "password", description = "密码", required = true, example = "admin")
+    })
     @PostMapping("/login")
     public ResponseEntity<Result> login(@RequestParam String username, @RequestParam String password) {
         Assert.notNull(username, "username can not be empty");
@@ -41,6 +50,8 @@ public class UserController {
         return new ResponseEntity<>(Result.ok(model), HttpStatus.OK);
     }
 
+    @Operation(summary = "用户登出", description = "用户登出接口")
+    @Parameter(name = "Authorization", description = "token", required = true, in = ParameterIn.HEADER)
     @DeleteMapping
     @Authorization
     public ResponseEntity<Result> logout(@CurrentUser User user) {
