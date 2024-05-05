@@ -29,6 +29,8 @@ public class MoviesMetadata implements Serializable {
     @TableId(value = "id")
     private Integer id;
 
+    private Integer is_deleted;
+
     @Schema(description = "IMDB id", example = "1")
     private String imdbId;
 

@@ -67,7 +67,35 @@ public class MovieController {
         if (moviesService.save(movie)) {
             return ResponseEntity.ok(Result.ok());
         } else {
-            return ResponseEntity.ok(Result.error(ResultStatus.ERROR));
+            return ResponseEntity.ok(Result.error(501, "添加失败"));
+        }
+    }
+
+    @Operation(summary = "删除电影", description = "删除电影接口")
+    @Parameters({
+            @Parameter(name = "id", description = "电影id", required = true)
+    })
+    @Admin
+    @DeleteMapping("/movie/{id}")
+    public ResponseEntity<Result> deleteMovie(@PathVariable @NotNull Integer id) {
+        if (moviesService.getBaseMapper().deleteById(id) > 0) {
+            return ResponseEntity.ok(Result.ok());
+        } else {
+            return ResponseEntity.ok(Result.error(501, "删除失败"));
+        }
+    }
+
+    @Operation(summary = "更新电影", description = "更新电影接口")
+    @Parameters({
+            @Parameter(name = "movie", description = "电影信息", required = true)
+    })
+    @Admin
+    @PutMapping("/movie")
+    public ResponseEntity<Result> updateMovie(@RequestBody MoviesMetadata movie) {
+        if (moviesService.getBaseMapper().updateById(movie) > 0) {
+            return ResponseEntity.ok(Result.ok());
+        } else {
+            return ResponseEntity.ok(Result.error(501, "更新失败"));
         }
     }
 

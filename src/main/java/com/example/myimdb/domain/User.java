@@ -24,6 +24,8 @@ public class User implements Serializable {
     @TableId(value = "id")
     private Integer id;
 
+    private Integer is_deleted;
+
     @Schema(description = "用户名", example = "admin")
     private String username;
 
