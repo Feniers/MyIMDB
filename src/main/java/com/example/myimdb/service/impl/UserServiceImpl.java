@@ -20,4 +20,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         queryWrapper.eq("username", username);
         return this.baseMapper.selectOne(queryWrapper);
     }
+
+    @Override
+    public boolean checkAdmin(long userId) {
+        User user = this.baseMapper.selectById(userId);
+        return user.getRole() == 1;
+    }
 }

@@ -1,7 +1,11 @@
 package com.example.myimdb.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.myimdb.domain.MoviesMetadata;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +17,7 @@ import com.example.myimdb.domain.MoviesMetadata;
  */
 public interface IMoviesMetadataService extends IService<MoviesMetadata> {
 
+    String getMovies();
+
+    void getMoviesPage(IPage<MoviesMetadata> page);
 }

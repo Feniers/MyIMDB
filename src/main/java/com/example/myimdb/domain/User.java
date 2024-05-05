@@ -33,4 +33,10 @@ public class User implements Serializable {
     @Schema(description = "昵称", example = "管理员")
     private String nickname;
 
+    @Schema(description = "角色", example = "1")
+    private Integer role;
+
+//    @Schema(description = "头像", example = "http://www.baidu.com")
+//    private String avatar;
+
 }

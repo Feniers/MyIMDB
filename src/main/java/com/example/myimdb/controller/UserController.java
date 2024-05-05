@@ -1,10 +1,10 @@
 package com.example.myimdb.controller;
 
-import com.example.myimdb.authorization.annotation.Authorization;
+import com.example.myimdb.authorization.annotation.LoginRequire;
 import com.example.myimdb.authorization.annotation.CurrentUser;
 import com.example.myimdb.authorization.manager.TokenManager;
 import com.example.myimdb.authorization.model.TokenModel;
-import com.example.myimdb.config.ResultStatus;
+import com.example.myimdb.domain.ResultStatus;
 import com.example.myimdb.domain.Result;
 import com.example.myimdb.domain.User;
 import com.example.myimdb.service.UserService;
@@ -56,7 +56,7 @@ public class UserController {
     @Operation(summary = "用户登出", description = "用户登出接口")
     @Parameter(name = "Authorization", description = "token", required = true, in = ParameterIn.HEADER)
     @DeleteMapping
-    @Authorization
+    @LoginRequire
     public ResponseEntity<Result> logout(@CurrentUser User user) {
         tokenManager.deleteToken(user.getId());
         return new ResponseEntity<>(Result.ok(), HttpStatus.OK);
