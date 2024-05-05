@@ -7,12 +7,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 @Schema(name="User", description="用户实体类")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Table("user")
-public class User {
+public class User implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Schema(description = "用户id", example = "1")
     @TableId(value = "id")

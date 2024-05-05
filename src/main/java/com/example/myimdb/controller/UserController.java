@@ -13,15 +13,18 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "User", description = "用户相关接口")
 @RestController
 @RequestMapping("/user")
+@Validated
 public class UserController {
     @Autowired
     private UserService userService;
@@ -31,11 +34,11 @@ public class UserController {
 
     @Operation(summary = "用户登录", description = "用户登录接口")
     @Parameters({
-            @Parameter(name = "username", description = "用户名", required = true, example = "admin"),
-            @Parameter(name = "password", description = "密码", required = true, example = "admin")
+            @Parameter(name = "username", description = "用户名", required = true),
+            @Parameter(name = "password", description = "密码", required = true)
     })
     @PostMapping("/login")
-    public ResponseEntity<Result> login(@RequestParam String username, @RequestParam String password) {
+    public ResponseEntity<Result> login(@RequestParam @NotNull String username, @RequestParam @NotNull String password) {
         Assert.notNull(username, "username can not be empty");
         Assert.notNull(password, "password can not be empty");
 
