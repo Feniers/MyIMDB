@@ -4,17 +4,18 @@ import com.example.myimdb.authorization.annotation.LoginRequire;
 import com.example.myimdb.authorization.annotation.CurrentUser;
 import com.example.myimdb.authorization.manager.TokenManager;
 import com.example.myimdb.authorization.model.TokenModel;
-import com.example.myimdb.domain.ResultStatus;
-import com.example.myimdb.domain.Result;
-import com.example.myimdb.domain.User;
+import com.example.myimdb.domain.*;
+import com.example.myimdb.service.IRatingsSmallService;
 import com.example.myimdb.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,8 @@ public class UserController {
 
     @Autowired
     private TokenManager tokenManager;
+    @Autowired
+    private IRatingsSmallService ratingsSmallService;
 
     @Operation(summary = "用户注册", description = "用户注册接口")
     @PostMapping("/user")
@@ -92,22 +95,41 @@ public class UserController {
         if (userService.getById(user.getId()) == null) {
             return new ResponseEntity<>(Result.error(ResultStatus.RESOURCE_NOT_FOUND), HttpStatus.NOT_FOUND);
         }
-        if(newUser.getUsername() != null) {
+        if (newUser.getUsername() != null) {
             user.setUsername(newUser.getUsername());
         }
-        if(newUser.getPassword() != null) {
+        if (newUser.getPassword() != null) {
             user.setPassword(newUser.getPassword());
         }
-        if(newUser.getNickname() != null) {
+        if (newUser.getNickname() != null) {
             user.setNickname(newUser.getNickname());
         }
-        if(newUser.getRole() != null) {
+        if (newUser.getRole() != null) {
             user.setRole(newUser.getRole());
         }
-        if(userService.getBaseMapper().updateById(user) > 0) {
+        if (userService.getBaseMapper().updateById(user) > 0) {
             return new ResponseEntity<>(Result.ok(), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(Result.error(501,"更新失败"), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(Result.error(501, "更新失败"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @Operation(summary = "打分", description = "打分接口")
+    @Parameters({
+            @Parameter(name = "movieId", description = "电影id", required = true),
+            @Parameter(name = "rating", description = "评分", required = true),
+            @Parameter(name = "Authorization, token", required = true, in = ParameterIn.HEADER)
+    })
+    @LoginRequire
+    @PostMapping("/rate")
+    public ResponseEntity<Result> rateMovie(@CurrentUser User user,
+                                            @RequestParam @NotNull Integer movieId,
+                                            @RequestParam @Range(min = 0, max = 5, message = "评分应该在0-5之间") Double rating) {
+        if (ratingsSmallService.rate(user.getId(), movieId, rating)) {
+            return new ResponseEntity<>(Result.ok(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(Result.error(501, "评分失败"), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 }

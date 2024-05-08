@@ -13,5 +13,5 @@ import com.example.myimdb.domain.RatingsSmall;
  * @since 2024-05-04
  */
 public interface IRatingsSmallService extends IService<RatingsSmall> {
-
+    boolean rate(Integer id, Integer movieId, Double rating);
 }

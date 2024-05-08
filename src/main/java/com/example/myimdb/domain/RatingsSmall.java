@@ -1,9 +1,11 @@
 package com.example.myimdb.domain;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import org.springframework.data.relational.core.mapping.Column;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -25,7 +27,7 @@ public class RatingsSmall implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Schema(description = "评分id", example = "1")
-    @TableId(value = "id")
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     @Schema(description = "用户id", example = "1")

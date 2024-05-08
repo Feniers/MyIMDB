@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import org.springframework.data.relational.core.mapping.Column;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -32,12 +33,14 @@ public class MoviesMetadata implements Serializable {
     private Integer is_deleted;
 
     @Schema(description = "IMDB id", example = "1")
+    @Column("imdb_id")
     private String imdbId;
 
     @Schema(description = "是否是成人内容", example = "False")
     private boolean adult;
 
     @Schema(description = "所属集合", example = "{'id': 10194, 'name': 'Toy Story Collection', 'poster_path': '/7G9915LfUQ2lVfwMEEhDsn3kT4B.jpg', 'backdrop_path': '/9FBwqcd9IRruEDUrTdcaafOMKUq.jpg'}")
+    @Column("belongs_to_collection")
     private String belongsToCollection;
 
     @Schema(description = "预算", example = "30000000")
@@ -50,9 +53,11 @@ public class MoviesMetadata implements Serializable {
     private String homepage;
 
     @Schema(description = "原始语言", example = "en")
+    @Column("original_language")
     private String originalLanguage;
 
     @Schema(description = "原始标题", example = "Toy Story")
+    @Column("original_title")
     private String originalTitle;
 
     @Schema(description = "概述", example = "Led by Woody, Andy's toys live happily in his room until Andy's birthday brings Buzz Lightyear onto the scene. Afraid of losing his place in Andy's heart, Woody plots against Buzz. But when circumstances separate Buzz and Woody from their owner, the duo eventually learns to put aside their differences.")
@@ -62,15 +67,19 @@ public class MoviesMetadata implements Serializable {
     private Double popularity;
 
     @Schema(description = "海报路径", example = "/rhIRbceoE9lR4veEXuwCC2wARtG.jpg")
+    @Column("poster_path")
     private String posterPath;
 
     @Schema(description = "制作公司", example = "[{'name': 'Pixar Animation Studios', 'id': 3}]")
+    @Column("production_companies")
     private String productionCompanies;
 
     @Schema(description = "制作国家", example = "[{'iso_3166_1': 'US', 'name': 'United States of America'}]")
+    @Column("production_countries")
     private String productionCountries;
 
     @Schema(description = "发布日期", example = "1995-10-30")
+    @Column("release_date")
     private Date releaseDate;
 
     @Schema(description = "收入", example = "373554033")
@@ -80,6 +89,7 @@ public class MoviesMetadata implements Serializable {
     private Double runtime;
 
     @Schema(description = "语言", example = "[{'iso_639_1': 'en', 'name': 'English'}]")
+    @Column("spoken_languages")
     private String spokenLanguages;
 
     @Schema(description = "状态", example = "Released")
@@ -95,9 +105,11 @@ public class MoviesMetadata implements Serializable {
     private boolean video;
 
     @Schema(description = "评分", example = "7.7")
+    @Column("vote_average")
     private Double voteAverage;
 
     @Schema(description = "评分次数", example = "5415")
+    @Column("vote_count")
     private Integer voteCount;
 
 //    @Override

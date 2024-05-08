@@ -28,7 +28,7 @@ public class User implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @Schema(description = "用户id", example = "1")
+    @Schema(description = "用户id", example = "20")
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
