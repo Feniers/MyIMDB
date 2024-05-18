@@ -23,11 +23,13 @@ public class Credits implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @Schema(description = "演职员id", example = "1")
+    @Schema(description ="movie_mateData id", example = "1")
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
+    @Schema(description = "演员")
     private String cast;
 
+    @Schema(description = "导演")
     private String crew;
 }

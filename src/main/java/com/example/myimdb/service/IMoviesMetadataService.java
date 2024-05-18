@@ -20,4 +20,5 @@ public interface IMoviesMetadataService extends IService<MoviesMetadata> {
     String getMovies();
 
     void getMoviesPage(IPage<MoviesMetadata> page);
+
 }
