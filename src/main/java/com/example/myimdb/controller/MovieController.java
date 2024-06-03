@@ -11,6 +11,7 @@ import com.example.myimdb.domain.Result;
 import com.example.myimdb.domain.User;
 import com.example.myimdb.service.GenresService;
 import com.example.myimdb.service.IMoviesMetadataService;
+import com.example.myimdb.utils.RecommendationClient;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -29,6 +30,8 @@ import java.util.List;
 public class MovieController {
     @Autowired
     private IMoviesMetadataService moviesService;
+    @Autowired
+    private RecommendationClient recommendationClient;
 
 
     @Operation(summary = "获取电影列表", description = "获取电影列表接口")
@@ -106,6 +109,11 @@ public class MovieController {
         }
     }
 
+    @GetMapping("/testGrpc")
+    public ResponseEntity<Result> testGrpc(int userId) {
+        List<Integer> recommendations = recommendationClient.getRecommendations(userId);
+        return ResponseEntity.ok(Result.ok(recommendations));
+    }
 
 
 }

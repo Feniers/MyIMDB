@@ -30,6 +30,4 @@ logging:
     com:
       example:
         myimdb: DEBUG
-#    org:
-#      springframework: DEBUG
 
