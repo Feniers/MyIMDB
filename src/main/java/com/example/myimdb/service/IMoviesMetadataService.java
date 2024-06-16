@@ -27,4 +27,5 @@ public interface IMoviesMetadataService extends IService<MoviesMetadata> {
     }
 
     List<Map<String, Object>> findMoviesByColumnCode(String columnCode, String keyword);
+
 }

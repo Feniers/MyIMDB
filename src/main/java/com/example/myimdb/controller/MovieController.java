@@ -8,12 +8,16 @@ import com.example.myimdb.authorization.annotation.LoginRequire;
 import com.example.myimdb.domain.ResultStatus;
 import com.example.myimdb.domain.MoviesMetadata;
 import com.example.myimdb.domain.Result;
+import com.example.myimdb.domain.User;
+import com.example.myimdb.service.GenresService;
 import com.example.myimdb.service.IMoviesMetadataService;
+import com.example.myimdb.utils.RecommendationClient;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,11 +25,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@ResponseBody
+@Slf4j
 @Tag(name = "Movie", description = "电影相关接口")
 public class MovieController {
     @Autowired
     private IMoviesMetadataService moviesService;
+    @Autowired
+    private RecommendationClient recommendationClient;
+
 
     @Operation(summary = "获取电影列表", description = "获取电影列表接口")
     @Parameters({
@@ -118,5 +125,12 @@ public class MovieController {
             return ResponseEntity.ok(Result.error(501, "更新失败"));
         }
     }
+
+    @GetMapping("/testGrpc")
+    public ResponseEntity<Result> testGrpc(int userId) {
+        List<Integer> recommendations = recommendationClient.getRecommendations(userId);
+        return ResponseEntity.ok(Result.ok(recommendations));
+    }
+
 
 }

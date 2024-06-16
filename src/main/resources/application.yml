@@ -16,7 +16,7 @@ spring:
 
 mybatis-plus:
   configuration:
-    map-underscore-to-camel-case: true
+    map-underscore-to-camel-case: false
 
   global-config:
     db-config:
@@ -30,6 +30,4 @@ logging:
     com:
       example:
         myimdb: DEBUG
-#    org:
-#      springframework: DEBUG
 
