@@ -33,7 +33,6 @@ public class MovieController {
     @Autowired
     private RecommendationClient recommendationClient;
 
-
     @Operation(summary = "获取电影列表", description = "获取电影列表接口")
     @Parameters({
             @Parameter(name = "pageNum", description = "页码", required = true),
