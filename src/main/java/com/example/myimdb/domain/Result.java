@@ -31,7 +31,7 @@ public class Result {
     public Result(int code, String message) {
         this.code = code;
         this.message = message;
-        this.data = "";
+        this.data =new Object();
     }
 
     public Result(int code, String message, Object data) {

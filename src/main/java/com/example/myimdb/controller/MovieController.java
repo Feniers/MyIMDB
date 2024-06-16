@@ -18,7 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
+@ResponseBody
 @Tag(name = "Movie", description = "电影相关接口")
 public class MovieController {
     @Autowired
@@ -42,6 +45,23 @@ public class MovieController {
             return ResponseEntity.ok(Result.ok(moviesService.getBaseMapper().selectPage(page,null)));
     }
 
+    @Operation(summary = "搜索电影", description = "获取电影详情接口")
+    @Parameters({
+            @Parameter(name = "searchInfo", description = "搜索的信息", required = true),
+            @Parameter(name = "searchType", description = "搜索的类型", required = true)
+    })
+    @GetMapping("/movies/search")
+    public ResponseEntity<Result> getMovieInfo(@RequestParam @NotNull String searchInfo,
+                                               @RequestParam @NotNull String searchType) {
+        List movie = moviesService.findMoviesByColumnCode(searchType,searchInfo);
+//        MoviesMetadata movie = moviesService.getBaseMapper().selectById(id);
+        if (movie == null) {
+            return ResponseEntity.ok(Result.error(ResultStatus.RESOURCE_NOT_FOUND));
+        }else {
+            return ResponseEntity.ok(Result.ok(movie));
+        }
+
+    }
 
     @Operation(summary = "获取电影详情", description = "获取电影详情接口")
     @Parameters({

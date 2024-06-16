@@ -7,6 +7,9 @@ import com.example.myimdb.domain.User;
 import com.example.myimdb.service.UserService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
+
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
     @Override
@@ -26,4 +29,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         User user = this.baseMapper.selectById(userId);
         return user.getRole() == 1;
     }
+
+//    @Override
+//    public User getUser(int id,String name, int cid) {
+//        QueryWrapper<User> wrapper=new QueryWrapper<>();
+//        wrapper.eq("name",name)
+//                .like(());
+//
+//        User selectUser=this.baseMapper.selectOne(wrapper);
+//        User user = this.baseMapper.selectById(id);
+//        return user;
+//    }
+
+
+
 }
