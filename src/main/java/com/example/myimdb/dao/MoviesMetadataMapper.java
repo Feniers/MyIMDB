@@ -20,23 +20,8 @@ import java.util.Map;
  */
 public interface MoviesMetadataMapper extends BaseMapper<MoviesMetadata> {
 
-    @Select("<script>" +
-            "SELECT m.*, c.cast, c.crew " +
-            "FROM movies_metadata m " +
-            "JOIN credits c ON m.id = c.id " +
-            "WHERE " +
-            "<choose>" +
-            "  <when test='columnName == \"title\" or columnName == \"original_title\" or columnName == \"overview\"'>" +
-            "    m.${columnName} LIKE CONCAT('%', #{keyword}, '%')" +
-            "  </when>" +
-            "  <when test='columnName == \"cast\" or columnName == \"crew\"'>" +
-            "    c.${columnName} LIKE CONCAT('%', #{keyword}, '%')" +
-            "  </when>" +
-            "  <otherwise>" +
-            "    1=0 <!-- 防止不正确的输入产生错误 -->" +
-            "  </otherwise>" +
-            "</choose>" +
-            "</script>")
+    @Select("SELECT * FROM movies_metadata " +
+            "WHERE genres LIKE CONCAT('%', #{columnName}, '%') AND title LIKE CONCAT('%', #{keyword}, '%')")
     List<Map<String, Object>> searchMoviesWithCredits(@Param("columnName") String columnName, @Param("keyword") String keyword);
 //    default List<Map<String, Object>> selectSpecificColumns(@Param("columnName") String columnName, @Param("keyword") String keyword) {
 //

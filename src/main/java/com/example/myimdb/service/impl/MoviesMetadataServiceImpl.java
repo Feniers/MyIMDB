@@ -1,6 +1,5 @@
 package com.example.myimdb.service.impl;
 
-
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.myimdb.dao.MoviesMetadataMapper;
@@ -49,15 +48,15 @@ public class MoviesMetadataServiceImpl extends ServiceImpl<MoviesMetadataMapper,
 
     @Override
     public List<Map<String, Object>> findMoviesByColumnCode(String columnCode, String keyword) {
-        String columnName = mapColumnCodeToName(columnCode);
-        List<String> columnsRequired = new ArrayList<>();
+//        String columnName = mapColumnCodeToName(columnCode);
+//        List<String> columnsRequired = new ArrayList<>();
 
         // 添加元素到列表中
-        columnsRequired.add("title");
+//        columnsRequired.add("title");
 //        columnsRequired.add("Element 2");
 //        columnsRequired.add("Element 3");
 //        List<Map<String, Object>> results = moviesMetadataMapper.searchMoviesWithCredits(columnName, keyword);
-        List<Map<String, Object>> results = this.baseMapper.searchMoviesWithCredits(columnName, keyword);
+        List<Map<String, Object>> results = this.baseMapper.searchMoviesWithCredits(columnCode, keyword);
 //        for (Map<String, Object> result : results) {
 //            String crewJson = (String) result.get("crew");
 //            String castJson = (String) result.get("cast");
