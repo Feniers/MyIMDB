@@ -1,22 +1,23 @@
 package com.example.myimdb.controller;
 
-import com.example.myimdb.authorization.annotation.LoginRequire;
 import com.example.myimdb.authorization.annotation.CurrentUser;
-import com.example.myimdb.authorization.manager.TokenManager;
-import com.example.myimdb.authorization.model.TokenModel;
-import com.example.myimdb.domain.*;
+import com.example.myimdb.authorization.annotation.LoginRequire;
+import com.example.myimdb.domain.Result;
+import com.example.myimdb.domain.ResultStatus;
+import com.example.myimdb.domain.User;
 import com.example.myimdb.service.IRatingsSmallService;
 import com.example.myimdb.service.UserService;
+import com.example.myimdb.utils.JWTUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
@@ -26,17 +27,21 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "User", description = "用户相关接口")
 @RestController
 @Validated
+@Slf4j
 public class UserController {
     @Autowired
     private UserService userService;
 
     @Autowired
-    private TokenManager tokenManager;
-    @Autowired
     private IRatingsSmallService ratingsSmallService;
+    @Autowired
+    private JWTUtils jWTUtils;
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
+
 
     @Operation(summary = "用户注册", description = "用户注册接口")
-    @PostMapping("/user")
+    @PostMapping("/user/register")
     public ResponseEntity<Result> register(@RequestBody User user) {
         Assert.hasLength(user.getUsername(), "用户名不能为空");
         Assert.hasLength(user.getPassword(), "密码不能为空");
@@ -55,9 +60,11 @@ public class UserController {
             @Parameter(name = "username", description = "用户名", required = true),
             @Parameter(name = "password", description = "密码", required = true)
     })
-    @PostMapping("/user/login")
-    public ResponseEntity<Result> login(@RequestParam @NotEmpty(message = "用户名不能为空") String username,
-                                        @RequestParam @NotEmpty(message = "密码不能为空") String password) {
+    @PutMapping("/user/login")
+    public ResponseEntity<Result> login(@RequestParam  String username,
+                                        @RequestParam  String password) {
+
+        log.info("username: {}, password: {}", username, password);
 
         User user = userService.findByUsername(username);
         if (user == null ||  //未注册
@@ -65,9 +72,20 @@ public class UserController {
             //提示用户名或密码错误
             return new ResponseEntity<>(Result.error(ResultStatus.USERNAME_OR_PASSWORD_ERROR), HttpStatus.BAD_REQUEST);
         }
+
+        // 如果已经登录，返回已登录
+//        if(tokenManager.checkToken(new TokenModel(user.getId(),null))){
+//            return new ResponseEntity<>(Result.error(ResultStatus.USER_ALREADY_LOGIN), HttpStatus.BAD_REQUEST);
+//        }
+
+        User newUser = userService.findByUsername(username);
+
+
         //生成一个token，保存用户登录状态
-        TokenModel model = tokenManager.createToken(user.getId());
-        return new ResponseEntity<>(Result.ok(model), HttpStatus.OK);
+//        TokenModel model = tokenManager.createToken(user.getId());
+//        TokenModel model = tokenManager.createToken(user);
+        String token= jWTUtils.createToken(newUser);
+        return new ResponseEntity<>(Result.ok(token), HttpStatus.OK);
     }
 
     @Operation(summary = "用户登出", description = "用户登出接口")
@@ -75,14 +93,16 @@ public class UserController {
     @DeleteMapping("/user")
     @LoginRequire
     public ResponseEntity<Result> logout(@CurrentUser User user) {
-        tokenManager.deleteToken(user.getId());
+        //删除redis中的token
+        redisTemplate.delete(user.getId().toString());
+
         return new ResponseEntity<>(Result.ok(), HttpStatus.OK);
     }
 
     @Operation(summary = "获取用户信息", description = "获取用户信息接口")
     @Parameter(name = "Authorization", description = "token", required = true, in = ParameterIn.HEADER)
     @LoginRequire
-    @GetMapping("/user/me")
+    @GetMapping("/user")
     public ResponseEntity<Result> getUser(@CurrentUser User user) {
         return new ResponseEntity<>(Result.ok(user), HttpStatus.OK);
     }
@@ -124,12 +144,11 @@ public class UserController {
     @PostMapping("/rate")
     public ResponseEntity<Result> rateMovie(@CurrentUser User user,
                                             @RequestParam @NotNull Integer movieId,
-                                            @RequestParam @Range(min = 0, max = 5, message = "评分应该在0-5之间") Double rating) {
+                                            @RequestParam @Range(min = 0, max = 10, message = "评分应该在0-10之间") Double rating) {
         if (ratingsSmallService.rate(user.getId(), movieId, rating)) {
             return new ResponseEntity<>(Result.ok(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(Result.error(501, "评分失败"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 }

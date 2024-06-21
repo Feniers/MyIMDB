@@ -31,7 +31,7 @@ public class Result {
     public Result(int code, String message) {
         this.code = code;
         this.message = message;
-        this.data =new Object();
+        this.data = null;  // 初始化为 null
     }
 
     public Result(int code, String message, Object data) {
@@ -43,7 +43,7 @@ public class Result {
     public Result(ResultStatus status) {
         this.code = status.getCode();
         this.message = status.getMessage();
-        this.data = "";
+        this.data = null;  // 初始化为 null
     }
 
     public Result(ResultStatus status, Object data) {
@@ -64,8 +64,7 @@ public class Result {
         return new Result(error);
     }
 
-    public static Result error(int code,String message) {
-        return new Result(code,message);
+    public static Result error(int code, String message) {
+        return new Result(code, message);
     }
-
 }

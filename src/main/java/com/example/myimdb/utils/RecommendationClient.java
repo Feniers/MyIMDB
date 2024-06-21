@@ -19,8 +19,8 @@ public class RecommendationClient implements DisposableBean {
     private final ManagedChannel channel;
     private final RecommendationServiceGrpc.RecommendationServiceBlockingStub blockingStub;
 
-    private static final String HOST = "59.110.49.185";
-//    private static final String HOST = "localhost";
+//    private static final String HOST = "59.110.49.185";
+    private static final String HOST = "localhost";
     private static final int PORT = 50051;
 
     public RecommendationClient() {

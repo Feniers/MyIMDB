@@ -28,29 +28,34 @@ public class User implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @Schema(description = "用户id", example = "20")
+//    @Schema(description = "用户id", example = "20")
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     private Integer is_deleted;
 
     @Schema(description = "用户名", example = "admin")
-    @NotEmpty(message = "用户名不能为空")
+//    @NotEmpty(message = "用户名不能为空")
     private String username;
 
     @Schema(description = "密码", example = "123456")
-    @NotBlank(message = "密码不能为空")
+//    @NotBlank(message = "密码不能为空")
     private String password;
 
-    @Schema(description = "昵称", example = "管理员")
+//    @Schema(description = "昵称", example = "管理员")
     private String nickname;
 
-    @Schema(description = "角色", example = "1")
+//    @Schema(description = "角色", example = "1")
     @Range(min = 0, max = 1, message = "角色只能为0或1")
     private Integer role;
 
 
-    public Map<String, Object> toMap() {
-        return Map.of("id", id, "username", username, "nickname", nickname, "role", role);
+//    public Map<String, Object> toMap() {
+//        return Map.of("id", id, "username", username, "nickname", nickname, "role", role);
+//    }
+
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
     }
 }

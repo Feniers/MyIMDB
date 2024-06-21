@@ -14,14 +14,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @Slf4j
 public class GlobalExceptionHandler {
 
-    // 处理所有不可预见的异常
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Result> handleException(Exception e) {
         log.error("服务器异常: " + e.getMessage(), e);
         return new ResponseEntity<>(Result.error(-1004, "服务器异常: " + e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    // 权限不足异常
     @ExceptionHandler(AuthorizationException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ResponseEntity<Result> handleAuthorizationException(AuthorizationException e) {
@@ -29,7 +27,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(Result.error(e.resultStatus), HttpStatus.FORBIDDEN);
     }
 
-    // 数据校验异常
     @ExceptionHandler(ValidationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Result> handleValidationException(ValidationException e) {
@@ -41,9 +38,6 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Result> handleIllegalArgumentException(IllegalArgumentException e) {
         log.error(e.getMessage(), e);
-        return new ResponseEntity<>(Result.error(400,e.getMessage()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(Result.error(400, e.getMessage()), HttpStatus.BAD_REQUEST);
     }
-
-
 }
-

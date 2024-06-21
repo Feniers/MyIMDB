@@ -1,7 +1,6 @@
 server:
   port: 8080
 
-
 spring:
   datasource:
     url: jdbc:mysql://59.110.49.185:3306/imdb
@@ -12,7 +11,17 @@ spring:
     redis:
       port: 6379
       host: 59.110.49.185
-      database: 0
+#      database: 0
+
+      lettuce:
+        pool:
+          max-active: 10
+          max-idle: 10
+          min-idle: 2
+          max-wait: 5000ms
+        shutdown-timeout: 100ms
+        timeout: 5000ms
+
 
 mybatis-plus:
   configuration:
@@ -25,9 +34,18 @@ mybatis-plus:
       logic-not-delete-value: 0
 #      id-type: auto
 
+
+# 日志写入文件
 logging:
+  file:
+    path: /logs/imdb
+    name: imdb.log
   level:
+    root: info
     com:
       example:
-        myimdb: DEBUG
+        myimdb: debug
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{50} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{50} - %msg%n"
 
